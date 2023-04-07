@@ -7,6 +7,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
+import kotlin.random.Random
 
 class MainActivity : AppCompatActivity() {
     @SuppressLint("MissingInflatedId")
@@ -29,13 +30,16 @@ class MainActivity : AppCompatActivity() {
                 Toast.makeText(this, "Uzupelnij wszystkie pola", Toast.LENGTH_SHORT).show()
             }
             else{
+                val text = losujtext(iloscZnakow.toString().toInt())
+
 
             }
         }
     }
+
 }
 // losowanie tekstu
-fun losujtext(ilosc:Int):String{
-
-    return -1
+fun losujtext(ilosc:Int): String {
+    val listaZnakow : List<Char> = ('a'..'z') + ('A'..'Z') + ('0' .. '9')
+    return (1..ilosc).map { Random.nextInt(0, listaZnakow.size) }.map(listaZnakow::get).joinToString("")
 }
