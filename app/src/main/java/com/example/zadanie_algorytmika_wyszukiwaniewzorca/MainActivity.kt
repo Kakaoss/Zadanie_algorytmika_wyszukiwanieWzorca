@@ -37,7 +37,13 @@ class MainActivity : AppCompatActivity() {
                 var czasBF = measureTimeMillis {
                     bruteForce(wzorzec.text.toString(),text)
                 }
-                czasBrute.text = "{$czasBF}ms"
+                czasBrute.text = "$czasBF ms"
+
+                //czas KMP
+                var czasKMPe = measureTimeMillis {
+                    KMP(wzorzec.text.toString(),text)
+                }
+                czasKMP.text = "$czasKMPe ms"
             }
         }
     }
@@ -48,6 +54,7 @@ fun losujtext(ilosc:Int): String {
     val listaZnakow : List<Char> = ('a'..'z') + ('A'..'Z') + ('0' .. '9')
     return (1..ilosc).map { Random.nextInt(0, listaZnakow.size) }.map(listaZnakow::get).joinToString("")
 }
+// Brute Force
 fun bruteForce(wzorzec: String, text: String): Int {
     val n = text.length
     val m = wzorzec.length
@@ -61,4 +68,49 @@ fun bruteForce(wzorzec: String, text: String): Int {
         }
     }
     return -1
+}
+fun KMP(wzorzec: String, text: String): Int {
+    val n = text.length
+    val m = wzorzec.length
+    val lps = computeLpsArray(wzorzec)
+    var i = 0
+    var j = 0
+    while (i < n) {
+        if (text[i] == wzorzec[j]) {
+            i++
+            j++
+        }
+        if (j == m) {
+            return i - j
+        } else if (i < n && text[i] != wzorzec[j]) {
+            if (j != 0) {
+                j = lps[j - 1]
+            } else {
+                i++
+            }
+        }
+    }
+    return -1
+}
+
+fun computeLpsArray(wzorzec: String): IntArray {
+    val m = wzorzec.length
+    val lps = IntArray(m)
+    var len = 0
+    var i = 1
+    while (i < m) {
+        if (wzorzec[i] == wzorzec[len]) {
+            len++
+            lps[i] = len
+            i++
+        } else {
+            if (len != 0) {
+                len = lps[len - 1]
+            } else {
+                lps[i] = 0
+                i++
+            }
+        }
+    }
+    return lps
 }
