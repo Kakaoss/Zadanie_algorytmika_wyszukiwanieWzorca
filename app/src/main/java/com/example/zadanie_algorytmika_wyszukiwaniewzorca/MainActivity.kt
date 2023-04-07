@@ -44,6 +44,12 @@ class MainActivity : AppCompatActivity() {
                     KMP(wzorzec.text.toString(),text)
                 }
                 czasKMP.text = "$czasKMPe ms"
+
+                //czas BM
+                var czasBMm = measureTimeMillis {
+                    BM(wzorzec.text.toString(),text)
+                }
+                czasBM.text = "$czasBMm ms"
             }
         }
     }
@@ -69,6 +75,9 @@ fun bruteForce(wzorzec: String, text: String): Int {
     }
     return -1
 }
+
+//KMP
+
 fun KMP(wzorzec: String, text: String): Int {
     val n = text.length
     val m = wzorzec.length
@@ -113,4 +122,36 @@ fun computeLpsArray(wzorzec: String): IntArray {
         }
     }
     return lps
+}
+
+// BM
+
+fun BM(wzorzec: String, text: String): Int {
+    val n = text.length
+    val m = wzorzec.length
+    val last = buildLast(wzorzec)
+    var i = m - 1
+    var j = m - 1
+    while (i < n) {
+        if (text[i] == wzorzec[j]) {
+            if (j == 0) {
+                return i
+            }
+            i--
+            j--
+        } else {
+            val k = last[text[i].toInt()]
+            i += m - minOf(j, 1 + k)
+            j = m - 1
+        }
+    }
+    return -1
+}
+
+fun buildLast(wzorzec: String): IntArray {
+    val last = IntArray(256) { -1 }
+    for (i in wzorzec.indices) {
+        last[wzorzec[i].toInt()] = i
+    }
+    return last
 }
