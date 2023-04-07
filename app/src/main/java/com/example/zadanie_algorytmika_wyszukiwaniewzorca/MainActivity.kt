@@ -8,6 +8,7 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import kotlin.random.Random
+import kotlin.system.measureTimeMillis
 
 class MainActivity : AppCompatActivity() {
     @SuppressLint("MissingInflatedId")
@@ -30,9 +31,13 @@ class MainActivity : AppCompatActivity() {
                 Toast.makeText(this, "Uzupelnij wszystkie pola", Toast.LENGTH_SHORT).show()
             }
             else{
-                val text = losujtext(iloscZnakow.toString().toInt())
+                val text = losujtext(iloscZnakow.text.toString().toInt())
 
-
+                //czas Brute
+                var czasBF = measureTimeMillis {
+                    bruteForce(wzorzec.text.toString(),text)
+                }
+                czasBrute.text = "{$czasBF}ms"
             }
         }
     }
@@ -42,4 +47,18 @@ class MainActivity : AppCompatActivity() {
 fun losujtext(ilosc:Int): String {
     val listaZnakow : List<Char> = ('a'..'z') + ('A'..'Z') + ('0' .. '9')
     return (1..ilosc).map { Random.nextInt(0, listaZnakow.size) }.map(listaZnakow::get).joinToString("")
+}
+fun bruteForce(wzorzec: String, text: String): Int {
+    val n = text.length
+    val m = wzorzec.length
+    for (i in 0..n - m) {
+        var j = 0
+        while (j < m && text[i+j] == wzorzec[j]) {
+            j++
+        }
+        if (j == m) {
+            return i
+        }
+    }
+    return -1
 }
