@@ -7,6 +7,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
+import kotlin.math.pow
 import kotlin.random.Random
 import kotlin.system.measureTimeMillis
 
@@ -50,6 +51,12 @@ class MainActivity : AppCompatActivity() {
                     BM(wzorzec.text.toString(),text)
                 }
                 czasBM.text = "$czasBMm ms"
+
+                //czas KR
+                var czasKRr = measureTimeMillis {
+                    KR(wzorzec.text.toString(),text)
+                }
+                czasKR.text = "$czasKRr ms"
             }
         }
     }
@@ -155,3 +162,23 @@ fun buildLast(wzorzec: String): IntArray {
     }
     return last
 }
+
+// KR
+
+fun KR(wzorzec: String, text: String): Int {
+    val n = text.length
+    val m = wzorzec.length
+    val prime = 101
+    val pHash = wzorzec.hashCode()
+    var tHash = text.substring(0, m).hashCode()
+    for (i in 0..n - m) {
+        if (tHash == pHash && text.substring(i, i + m) == wzorzec) {
+            return i
+        }
+        if (i < n - m) {
+            tHash = (((tHash - text[i].hashCode() * prime.toDouble().pow(m - 1).toInt()) % Int.MAX_VALUE) * prime + text[i + m].hashCode()) % Int.MAX_VALUE
+        }
+    }
+    return -1
+}
+
