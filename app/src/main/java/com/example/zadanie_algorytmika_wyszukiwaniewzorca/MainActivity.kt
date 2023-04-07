@@ -33,7 +33,7 @@ class MainActivity : AppCompatActivity() {
             }
             else{
                 val text = losujtext(iloscZnakow.text.toString().toInt())
-
+                if (iloscZnakow.text.toString().toInt() >= wzorzec.text.toString().toInt()){
                 //czas Brute
                 var czasBF = measureTimeMillis {
                     bruteForce(wzorzec.text.toString(),text)
@@ -57,6 +57,7 @@ class MainActivity : AppCompatActivity() {
                     KR(wzorzec.text.toString(),text)
                 }
                 czasKR.text = "$czasKRr ms"
+            }
             }
         }
     }
